@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#050816" />
+    <meta name="description" content="一个为孩子设计的可交互宇宙探索器：从银河系飞到太阳系，再认识每一颗行星。" />
+    <title>小小宇宙 · 银河探索</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="universe" aria-label="可交互的银河系与太阳系三维场景"></canvas>
+      <div class="nebula nebula-a"></div>
+      <div class="nebula nebula-b"></div>
+
+      <header class="topbar glass">
+        <a class="brand" href="./" aria-label="小小宇宙首页">
+          <span class="brand-orbit"><span class="brand-planet"></span></span>
+          <span>
+            <strong>小小宇宙</strong>
+            <small>GALAXY EXPLORER</small>
+          </span>
+        </a>
+
+        <form id="search-form" class="search" role="search">
+          <span class="search-icon">⌕</span>
+          <input id="search-input" autocomplete="off" placeholder="搜索地球、木星、黑洞…" aria-label="搜索天体" />
+          <button type="submit" aria-label="开始搜索">前往</button>
+        </form>
+
+        <div class="top-actions">
+          <button id="sound-btn" class="icon-btn" type="button" aria-label="开启或关闭音效">♫</button>
+          <button id="help-btn" class="icon-btn" type="button" aria-label="查看操作帮助">?</button>
+        </div>
+      </header>
+
+      <nav id="breadcrumb" class="breadcrumb glass" aria-label="当前位置">
+        <button data-level="galaxy" class="active">银河系</button>
+        <span>›</span>
+        <button data-level="solar" disabled>太阳系</button>
+        <span>›</span>
+        <button data-level="planet" disabled>星球</button>
+      </nav>
+
+      <section id="hero" class="hero">
+        <p class="eyebrow"><span></span> 欢迎来到我们的银河系</p>
+        <h1>从这里出发，<br /><em>找到我们的地球。</em></h1>
+        <p class="hero-copy">拖动银河系看看它有多大，滚动鼠标靠近星星。你也可以坐上小火箭，让我带你一路飞回地球。</p>
+        <div class="hero-actions">
+          <button id="find-earth" class="primary-cta"><span>🚀</span> 找到地球</button>
+          <button id="free-explore" class="secondary-cta"><span>✦</span> 自由探索</button>
+          <button id="visit-blackhole" class="secondary-cta compact"><span>◉</span> 看黑洞</button>
+        </div>
+      </section>
+
+      <section id="solar-title" class="scene-title hidden" aria-live="polite">
+        <p>WELCOME TO</p>
+        <h2>太阳系</h2>
+        <span>八颗行星围绕太阳运行，点一点你最喜欢的星球。</span>
+      </section>
+
+      <aside id="info-panel" class="info-panel glass" aria-live="polite" aria-hidden="true">
+        <button id="close-info" class="panel-close" type="button" aria-label="关闭天体介绍">×</button>
+        <div class="planet-kicker"><span id="info-dot"></span><b id="info-type">行星</b></div>
+        <h2 id="info-name">地球</h2>
+        <p id="info-subtitle">我们的蓝色家园</p>
+        <div class="fact-grid">
+          <div><small>直径</small><strong id="info-diameter">12,742 km</strong></div>
+          <div><small>一年</small><strong id="info-year">365 天</strong></div>
+          <div><small>小知识</small><strong id="info-fact">71% 是海洋</strong></div>
+        </div>
+        <p id="info-description" class="info-description"></p>
+        <div class="panel-actions">
+          <button id="closer-btn" class="panel-primary">🔭 靠近看看</button>
+          <button id="location-btn" class="panel-secondary">⌂ 我们在哪里？</button>
+        </div>
+      </aside>
+
+      <aside id="planet-dock" class="planet-dock glass hidden" aria-label="太阳系快速导航">
+        <div class="dock-title"><span>太阳系导航</span><small>点选行星</small></div>
+        <div id="planet-buttons" class="planet-buttons"></div>
+      </aside>
+
+      <div id="labels" class="labels" aria-hidden="true"></div>
+
+      <div id="scale-note" class="scale-note glass">
+        <span class="pulse-dot"></span>
+        <span><strong>探索比例</strong><small>为了方便观察，天体和距离经过视觉化调整</small></span>
+      </div>
+
+      <div id="hint" class="hint glass">
+        <span>↔</span> 拖动旋转
+        <i></i>
+        <span>⌁</span> 滚轮缩放
+        <i></i>
+        <span>●</span> 点击天体
+      </div>
+
+      <div id="tour-card" class="tour-card glass hidden" aria-live="assertive">
+        <span id="tour-step">01</span>
+        <div><small>我们在哪里？</small><strong id="tour-text">这是我们的地球</strong></div>
+      </div>
+
+      <div id="toast" class="toast glass" role="status" aria-live="polite"></div>
+
+      <dialog id="help-dialog">
+        <button id="help-close" aria-label="关闭帮助">×</button>
+        <span class="dialog-emoji">🪐</span>
+        <h2>怎么玩？</h2>
+        <p>像看一个会动的星球模型一样操作就可以。</p>
+        <div class="help-grid">
+          <div><b>☝️ 拖一拖</b><span>旋转银河系和星球</span></div>
+          <div><b>🔎 滚一滚</b><span>靠近或远离天体</span></div>
+          <div><b>✨ 点一点</b><span>认识每一颗星球</span></div>
+          <div><b>🚀 坐火箭</b><span>自动飞到地球</span></div>
+        </div>
+      </dialog>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
