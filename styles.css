@@ -147,6 +147,7 @@ button:focus-visible, input:focus-visible { outline: 2px solid rgba(120, 232, 25
 .space-label.sun-label { color: #ffe9a8; }
 .space-label.earth-label { color: #9ad9ff; font-size: 10px; }
 .space-label.blackhole-label { color: #d7b5ff; }
+.space-label.stellar-label { color: #c4e4ff; font-size: 10px; }
 
 .scale-note { position: fixed; z-index: 14; left: 28px; bottom: 26px; border-radius: 14px; min-height: 49px; padding: 8px 13px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 35px rgba(0,0,0,.15); }
 .scale-note > span:last-child { display: flex; flex-direction: column; gap: 2px; }
