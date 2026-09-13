@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#050816" />
-    <meta name="description" content="一个为孩子设计的可交互宇宙探索器：从银河系飞到太阳系，再认识每一颗行星。" />
-    <title>小小宇宙 · 银河探索</title>
+    <meta name="description" content="一个为孩子设计的可交互宇宙探索器：从本星系群进入银河系、仙女座星系、三角座星系，再继续探索太阳系与行星。" />
+    <title>小小宇宙 · 星系探索</title>
     <link rel="stylesheet" href="./styles.css" />
     <script type="importmap">
       {
@@ -18,7 +18,7 @@
   </head>
   <body>
     <div id="app">
-      <canvas id="universe" aria-label="可交互的银河系与太阳系三维场景"></canvas>
+      <canvas id="universe" aria-label="可交互的本星系群、银河系和太阳系三维场景"></canvas>
       <div class="nebula nebula-a"></div>
       <div class="nebula nebula-b"></div>
 
@@ -33,7 +33,7 @@
 
         <form id="search-form" class="search" role="search">
           <span class="search-icon">⌕</span>
-          <input id="search-input" autocomplete="off" placeholder="搜索地球、木星、黑洞…" aria-label="搜索天体" />
+          <input id="search-input" autocomplete="off" placeholder="搜索仙女座、三角座、黑洞…" aria-label="搜索星系或天体" />
           <button type="submit" aria-label="开始搜索">前往</button>
         </form>
 
@@ -44,7 +44,9 @@
       </header>
 
       <nav id="breadcrumb" class="breadcrumb glass" aria-label="当前位置">
-        <button data-level="galaxy" class="active">银河系</button>
+        <button data-level="local-group" class="active">本星系群</button>
+        <span>›</span>
+        <button data-level="galaxy" disabled>星系</button>
         <span>›</span>
         <button data-level="solar" disabled>太阳系</button>
         <span>›</span>
@@ -52,37 +54,43 @@
       </nav>
 
       <section id="hero" class="hero">
-        <p class="eyebrow"><span></span> 欢迎来到我们的银河系</p>
-        <h1>从这里出发，<br /><em>找到我们的地球。</em></h1>
-        <p class="hero-copy">拖动银河系看看它有多大，滚动鼠标靠近星星。你也可以坐上小火箭，让我带你一路飞回地球。</p>
+        <p class="eyebrow"><span></span> 欢迎来到本星系群</p>
+        <h1>太阳系之外，<br /><em>还有很多银河邻居。</em></h1>
+        <p class="hero-copy">拖一拖看看银河系周围的伙伴。点进仙女座、三角座和麦哲伦云，听一段讲解，再决定下一站去哪儿。</p>
         <div class="hero-actions">
-          <button id="find-earth" class="primary-cta"><span>🚀</span> 找到地球</button>
-          <button id="free-explore" class="secondary-cta"><span>✦</span> 自由探索</button>
+          <button id="explore-andromeda" class="primary-cta"><span>🚀</span> 探索仙女座</button>
+          <button id="enter-milky-way" class="secondary-cta"><span>✦</span> 进入银河系</button>
           <button id="visit-blackhole" class="secondary-cta compact"><span>◉</span> 看黑洞</button>
         </div>
       </section>
 
       <section id="solar-title" class="scene-title hidden" aria-live="polite">
-        <p>WELCOME TO</p>
-        <h2>太阳系</h2>
-        <span>八颗行星围绕太阳运行，点一点你最喜欢的星球。</span>
+        <p id="scene-eyebrow">WELCOME TO</p>
+        <h2 id="scene-heading">太阳系</h2>
+        <span id="scene-copy">八颗行星围绕太阳运行，点一点你最喜欢的星球。</span>
       </section>
 
       <aside id="info-panel" class="info-panel glass" aria-live="polite" aria-hidden="true">
-        <button id="close-info" class="panel-close" type="button" aria-label="关闭天体介绍">×</button>
-        <div class="planet-kicker"><span id="info-dot"></span><b id="info-type">行星</b></div>
-        <h2 id="info-name">地球</h2>
-        <p id="info-subtitle">我们的蓝色家园</p>
+        <button id="close-info" class="panel-close" type="button" aria-label="关闭介绍">×</button>
+        <div class="planet-kicker"><span id="info-dot"></span><b id="info-type">星系</b></div>
+        <h2 id="info-name">仙女座星系</h2>
+        <p id="info-subtitle">银河系的大邻居</p>
         <div class="fact-grid">
-          <div><small>直径</small><strong id="info-diameter">12,742 km</strong></div>
-          <div><small>一年</small><strong id="info-year">365 天</strong></div>
-          <div><small>小知识</small><strong id="info-fact">71% 是海洋</strong></div>
+          <div><small id="info-size-label">直径</small><strong id="info-diameter">约 22 万光年</strong></div>
+          <div><small id="info-cycle-label">距离我们</small><strong id="info-year">约 250 万光年</strong></div>
+          <div><small>小知识</small><strong id="info-fact">本星系群最大的成员之一</strong></div>
         </div>
         <p id="info-description" class="info-description"></p>
         <div class="panel-actions">
-          <button id="closer-btn" class="panel-primary">🔭 靠近看看</button>
+          <button id="narration-btn" class="panel-primary" style="grid-column:1 / -1">🔊 听讲解</button>
+          <button id="closer-btn" class="panel-secondary">🔭 靠近看看</button>
           <button id="location-btn" class="panel-secondary">⌂ 我们在哪里？</button>
         </div>
+      </aside>
+
+      <aside id="galaxy-dock" class="planet-dock glass" aria-label="本星系群快速导航">
+        <div class="dock-title"><span>星系导航</span><small>选择下一站</small></div>
+        <div id="galaxy-buttons" class="planet-buttons"></div>
       </aside>
 
       <aside id="planet-dock" class="planet-dock glass hidden" aria-label="太阳系快速导航">
@@ -94,7 +102,7 @@
 
       <div id="scale-note" class="scale-note glass">
         <span class="pulse-dot"></span>
-        <span><strong>探索比例</strong><small>为了方便观察，天体和距离经过视觉化调整</small></span>
+        <span><strong>探索比例</strong><small>为了方便观察，星系、天体和距离经过视觉化调整</small></span>
       </div>
 
       <div id="hint" class="hint glass">
@@ -102,7 +110,7 @@
         <i></i>
         <span>⌁</span> 滚轮缩放
         <i></i>
-        <span>●</span> 点击天体
+        <span>●</span> 点击星系 / 天体
       </div>
 
       <div id="tour-card" class="tour-card glass hidden" aria-live="assertive">
@@ -114,14 +122,14 @@
 
       <dialog id="help-dialog">
         <button id="help-close" aria-label="关闭帮助">×</button>
-        <span class="dialog-emoji">🪐</span>
+        <span class="dialog-emoji">🌌</span>
         <h2>怎么玩？</h2>
-        <p>像看一个会动的星球模型一样操作就可以。</p>
+        <p>现在可以从本星系群开始，一层一层探索。</p>
         <div class="help-grid">
-          <div><b>☝️ 拖一拖</b><span>旋转银河系和星球</span></div>
-          <div><b>🔎 滚一滚</b><span>靠近或远离天体</span></div>
-          <div><b>✨ 点一点</b><span>认识每一颗星球</span></div>
-          <div><b>🚀 坐火箭</b><span>自动飞到地球</span></div>
+          <div><b>☝️ 拖一拖</b><span>旋转星系和星球</span></div>
+          <div><b>🔎 滚一滚</b><span>靠近或远离目标</span></div>
+          <div><b>✨ 点一点</b><span>进入其他星系</span></div>
+          <div><b>🔊 听一听</b><span>知识卡可语音讲解</span></div>
         </div>
       </dialog>
     </div>
